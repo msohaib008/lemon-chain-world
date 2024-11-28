@@ -1,13 +1,10 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { TextureLoader } from "three"
 import { loadTextures, applyTextures } from "../utilities";
 
-export const Grass = ({ model, ...props }) => {
+export const Grass = ({ model, textures, ...props }) => {
   const { scene } = useGLTF(model); // Load the tree model
-  const textureLoader = new TextureLoader();
-  const textures = loadTextures(textureLoader, 'Textures/');
   useEffect(() => {
     // Traverse the scene and make sure the trees don't have any colliders or RigidBody attached
     scene.traverse((child) => {

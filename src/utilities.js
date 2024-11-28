@@ -41,7 +41,7 @@ export const loadTextures = (textureLoader, TEXTURE_PATH) => ({
 export const applyTextures = (object, textures, THREE) => {
     object.traverse((child) => {
         if (child.isMesh) {
-            console.log({ meshName: child.material.name })
+            // console.log({ meshName: child.material.name })
             if (child.material.name === 'bark') {
                 child.material.map = textures.bark;
             } else if (child.material.name === 'foliage') {
@@ -63,7 +63,7 @@ export const applyTextures = (object, textures, THREE) => {
                 // Set texture wrapping and double-side rendering
                 child.material.map.wrapS = THREE.RepeatWrapping;
                 child.material.map.wrapT = THREE.RepeatWrapping;
-                child.material.side = THREE.DoubleSide;  // Render both sides of the geometry
+                // child.material.side = THREE.DoubleSide;  // Render both sides of the geometry
 
                 // child.material.transparent = true;
                 // child.material.alphaTest = 0.8;  // Optional: set alpha threshold

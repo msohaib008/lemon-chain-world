@@ -11,6 +11,7 @@ export function Character({ animation, ...props }) {
   const { nodes, materials, animations } = useGLTF("/models/character.glb");
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
+    console.log({animations, animation})
     actions[animation]?.reset().fadeIn(0.24).play();
     return () => actions?.[animation]?.fadeOut(0.24);
   }, [animation]);

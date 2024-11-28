@@ -9,7 +9,8 @@ import { useLoader } from "@react-three/fiber";
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { Trees } from "./Trees";
 import { Grass } from "./Grass";
-
+import { TextureLoader } from "three"
+import { loadTextures } from "../utilities";
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
@@ -44,6 +45,9 @@ export const Experience = () => {
   const onMapLoaded = () => {
     setMapLoaded(true); // Set to true once the map is loaded
   };
+  const textureLoader = new TextureLoader();
+
+  const textures = loadTextures(textureLoader, 'Textures/');
 
   return (
     <>
@@ -54,8 +58,8 @@ export const Experience = () => {
         // background
         // backgroundBlurriness={0.5}
       />
-      {/* <directionalLight
-        intensity={0.65}
+      <directionalLight
+        intensity={0.4}
         castShadow
         position={[-15, 10, 15]}
         shadow-mapSize-width={2048}
@@ -70,19 +74,20 @@ export const Experience = () => {
           ref={shadowCameraRef}
           attach={"shadow-camera"}
         />
-      </directionalLight> */}
+      </directionalLight>
        <Physics key={map} debug={false}>
         <Map
           scale={maps[map].scale}
           position={maps[map].position}
           model={`models/${map}.glb`}
           onLoaded={onMapLoaded}
+          textures={textures}
         />
         {mapLoaded && <CharacterController />}
 
       </Physics>
-      <Trees model="models/New_trees.glb" position={[0, -20.5, 0]} scale={[0.0005, 0.0005, 0.0005]} />
-      <Grass model="models/grass.glb" position={[0, -20.5, 0]} scale={[0.05, 0.05, 0.05]} />
+      <Trees model="models/New_trees.glb" textures={textures} position={[0, -20.5, 0]} scale={[0.0005, 0.0005, 0.0005]} />
+      <Grass model="models/grass.glb" textures={textures} position={[0, -20.5, 0]} scale={[0.05, 0.05, 0.05]} />
 
     </>
   );

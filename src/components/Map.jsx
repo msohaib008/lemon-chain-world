@@ -1,17 +1,14 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useRef } from "react";
-import { TextureLoader } from "three"
-import { loadTextures, applyTextures } from "../utilities";
+import { applyTextures } from "../utilities";
 import * as THREE from 'three';
 
-export const Map = ({ model,onLoaded , ...props }) => {
+export const Map = ({ model,onLoaded ,textures, ...props }) => {
   const { scene, animations } = useGLTF(model);
   const group = useRef();
   const { actions } = useAnimations(animations, group);
 
-  const textureLoader = new TextureLoader();
-  const textures = loadTextures(textureLoader, 'Textures/');
 
   useEffect(() => {
       scene.traverse((child) => {
