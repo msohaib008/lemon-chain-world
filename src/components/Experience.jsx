@@ -51,7 +51,7 @@ export const Experience = () => {
   const textures = loadTextures(textureLoader, 'Textures/');
   function Loader() {
     const { active, progress, errors, item, loaded, total } = useProgress()
-    return <Html center>{progress} % loaded</Html>
+    return <Html center style={{width: 100}}>Loading...</Html>
   }
   console.log({textures})
   return (
