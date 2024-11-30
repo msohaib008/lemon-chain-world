@@ -1,7 +1,7 @@
-import { Environment, OrthographicCamera } from "@react-three/drei";
+import { Environment, OrthographicCamera, Html, useProgress, Sky } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 import { useControls } from "leva";
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { CharacterController } from "./CharacterController";
 import { Map } from "./Map";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -27,6 +27,7 @@ const trees = [
   { modelPath: 'models/trees.glb', position: [0, -20.5, 0], scale: [0.0005, 0.0005, 0.0005] },
 ];
 export const Experience = () => {
+  const [isRotating, setIsRotating] = useState(false);
   const shadowCameraRef = useRef();
   const { map } = useControls("Map", {
     map: {
@@ -41,22 +42,23 @@ export const Experience = () => {
 
 
   const [mapLoaded, setMapLoaded] = useState(false); // State to track map load status
-  
+
   const onMapLoaded = () => {
     setMapLoaded(true); // Set to true once the map is loaded
   };
   const textureLoader = new TextureLoader();
 
   const textures = loadTextures(textureLoader, 'Textures/');
-
+  function Loader() {
+    const { active, progress, errors, item, loaded, total } = useProgress()
+    return <Html center>{progress} % loaded</Html>
+  }
+  console.log({textures})
   return (
     <>
-      {/* <OrbitControls /> */}
-      {/* <Environment preset="forest" /> */}
       <Environment
         files="models/HDRI.hdr"
-        // background
-        // backgroundBlurriness={0.5}
+        background={false}
       />
       <directionalLight
         intensity={0.4}
@@ -75,20 +77,25 @@ export const Experience = () => {
           attach={"shadow-camera"}
         />
       </directionalLight>
-       <Physics key={map} debug={false}>
-        <Map
-          scale={maps[map].scale}
-          position={maps[map].position}
-          model={`models/${map}.glb`}
-          onLoaded={onMapLoaded}
-          textures={textures}
+      <Suspense fallback={<Loader />}>
+        <Physics key={map} debug={false}>
+          <Map
+            scale={maps[map].scale}
+            position={maps[map].position}
+            model={`models/${map}.glb`}
+            onLoaded={onMapLoaded}
+            textures={textures}
+          />
+          {mapLoaded && <CharacterController setIsRotating={setIsRotating} />}
+
+        </Physics>
+        <Trees
+          model="models/New_trees.glb"
+          textures={textures} position={[0, -20.5, 0]}
+          scale={[0.0005, 0.0005, 0.0005]}
         />
-        {mapLoaded && <CharacterController />}
-
-      </Physics>
-      <Trees model="models/New_trees.glb" textures={textures} position={[0, -20.5, 0]} scale={[0.0005, 0.0005, 0.0005]} />
-      <Grass model="models/grass.glb" textures={textures} position={[0, -20.5, 0]} scale={[0.05, 0.05, 0.05]} />
-
+        <Grass model="models/grass.glb" textures={textures} position={[0, -20.5, 0]} scale={[0.05, 0.05, 0.05]} />
+      </Suspense>
     </>
   );
 };

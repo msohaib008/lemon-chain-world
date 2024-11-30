@@ -28,7 +28,7 @@ const lerpAngle = (start, end, t) => {
   return normalizeAngle(start + (end - start) * t);
 };
 
-export const CharacterController = () => {
+export const CharacterController = ({setIsRotating}) => {
   const { WALK_SPEED, RUN_SPEED, ROTATION_SPEED } = useControls(
     "Character Control",
     {
@@ -46,7 +46,7 @@ export const CharacterController = () => {
   const container = useRef();
   const character = useRef();
 
-  const [animation, setAnimation] = useState("idle");
+  const [animation, setAnimation] = useState("Idle");
 
   const characterRotationTarget = useRef(0);
   const rotationTarget = useRef(0);
@@ -127,12 +127,15 @@ export const CharacterController = () => {
           Math.cos(rotationTarget.current + characterRotationTarget.current) *
           speed;
         if (speed === RUN_SPEED) {
-          setAnimation("run");
+          setAnimation("Run");
+          // setIsRotating(true);
         } else {
-          setAnimation("walk");
+          setAnimation("Walk");
+          // setIsRotating(true);
         }
       } else {
-        setAnimation("idle");
+        setAnimation("Idle");
+        // setIsRotating(false);
       }
       character.current.rotation.y = lerpAngle(
         character.current.rotation.y,
@@ -167,7 +170,7 @@ export const CharacterController = () => {
         <group ref={cameraTarget} position-z={1.5} />
         <group ref={cameraPosition} position-y={3} position-z={-4} />
         <group ref={character}>
-          <Character scale={0.15} position-y={-0.2} animation={animation} />
+          <Character scale={0.25} position-y={-0.2} animation={animation} />
         </group>
       </group>
       <CapsuleCollider args={[0.08, 0.15]} />

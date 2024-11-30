@@ -8,19 +8,32 @@ import React, { useEffect, useRef } from "react";
 
 export function Character({ animation, ...props }) {
   const group = useRef();
-  const { nodes, materials, animations } = useGLTF("/models/character.glb");
+  const { nodes, materials, animations, scene } = useGLTF("/models/Ricardo.glb");
   const { actions } = useAnimations(animations, group);
   useEffect(() => {
-    console.log({animations, animation})
+    console.log({animations, animation, nodes, materials})
     actions[animation]?.reset().fadeIn(0.24).play();
     return () => actions?.[animation]?.fadeOut(0.24);
   }, [animation]);
+
+  useEffect(() => {
+    // Traverse the scene and make sure the trees don't have any colliders or RigidBody attached
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        // Make sure the tree meshes don't have any physics colliders or rigidbody
+        child.geometry = child.geometry.clone(); // Clone geometry to avoid unwanted physics interaction
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+  }, [scene]);
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
         <group name="fall_guys">
-          <primitive object={nodes._rootJoint} />
-          <skinnedMesh
+          <primitive object={scene} />
+          {/* <skinnedMesh
             name="body"
             geometry={nodes.body.geometry}
             material={materials.Material}
@@ -51,11 +64,11 @@ export function Character({ animation, ...props }) {
             skeleton={nodes.leg.skeleton}
             castShadow
             receiveShadow
-          />
+          /> */}
         </group>
       </group>
     </group>
   );
 }
 
-useGLTF.preload("/models/character.glb");
+useGLTF.preload("/models/Ricardo.glb");

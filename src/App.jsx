@@ -1,6 +1,8 @@
 import { KeyboardControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Experience } from "./components/Experience";
+import * as THREE from "three";
+import { useState } from "react";
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
@@ -12,6 +14,7 @@ const keyboardMap = [
 
 function App() {
   return (
+    <>
     <KeyboardControls map={keyboardMap}>
       <Canvas
         shadows
@@ -20,10 +23,11 @@ function App() {
           touchAction: "none",
         }}
       >
-        <color attach="background" args={["#ececec"]} />
-        <Experience />
+        <color attach="background" args={["#87ceeb"]} />
+        <Experience/>
       </Canvas>
     </KeyboardControls>
+    </>
   );
 }
 
