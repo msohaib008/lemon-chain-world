@@ -1,7 +1,7 @@
 import { Environment, OrthographicCamera, Html, useProgress, Sky } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 import { useControls } from "leva";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { CharacterController } from "./CharacterController";
 import { Map } from "./Map";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -28,6 +28,7 @@ const trees = [
 ];
 export const Experience = () => {
   const [isRotating, setIsRotating] = useState(false);
+  const [textures, setTextures] = useState(null);
   const shadowCameraRef = useRef();
   const { map } = useControls("Map", {
     map: {
@@ -48,54 +49,63 @@ export const Experience = () => {
   };
   const textureLoader = new TextureLoader();
 
-  const textures = loadTextures(textureLoader, 'Textures/');
-  function Loader() {
-    const { active, progress, errors, item, loaded, total } = useProgress()
-    return <Html center style={{width: 100}}>Loading...</Html>
+  
+
+  const useLoadTexture = async () => {
+    await loadTextures(textureLoader, 'Textures/').then((txtrs) => {
+      console.log("Textures ready for use:", txtrs);
+      setTextures(txtrs)
+    });
   }
-  console.log({textures})
+
+  useEffect(()=>{
+    useLoadTexture();
+  },[])
   return (
     <>
-      <Environment
-        files="models/HDRI.hdr"
-        background={false}
-      />
-      <directionalLight
-        intensity={0.4}
-        castShadow
-        position={[-15, 10, 15]}
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-        shadow-bias={-0.00005}
-      >
-        <OrthographicCamera
-          left={-22}
-          right={15}
-          top={10}
-          bottom={-20}
-          ref={shadowCameraRef}
-          attach={"shadow-camera"}
-        />
-      </directionalLight>
-      <Suspense fallback={<Loader />}>
-        <Physics key={map} debug={false}>
-          <Map
-            scale={maps[map].scale}
-            position={maps[map].position}
-            model={`models/${map}.glb`}
-            onLoaded={onMapLoaded}
-            textures={textures}
+      {textures &&
+        <>
+          <Environment
+            files="models/HDRI.hdr"
+            background={false}
           />
-          {mapLoaded && <CharacterController setIsRotating={setIsRotating} />}
+          <directionalLight
+            intensity={0.4}
+            castShadow
+            position={[-15, 10, 15]}
+            shadow-mapSize-width={2048}
+            shadow-mapSize-height={2048}
+            shadow-bias={-0.00005}
+          >
+            <OrthographicCamera
+              left={-22}
+              right={15}
+              top={10}
+              bottom={-20}
+              ref={shadowCameraRef}
+              attach={"shadow-camera"}
+            />
+          </directionalLight>
+          {/* <Suspense fallback={<Loader />}> */}
+          <Physics key={map} debug={false}>
+            <Map
+              scale={maps[map].scale}
+              position={maps[map].position}
+              model={`models/${map}.glb`}
+              onLoaded={onMapLoaded}
+              textures={textures}
+            />
+            {mapLoaded && <CharacterController />}
 
-        </Physics>
-        <Trees
-          model="models/New_trees.glb"
-          textures={textures} position={[0, -20.5, 0]}
-          scale={[0.0005, 0.0005, 0.0005]}
-        />
-        <Grass model="models/grass.glb" textures={textures} position={[0, -20.5, 0]} scale={[0.05, 0.05, 0.05]} />
-      </Suspense>
+          </Physics>
+          <Trees
+            model="models/New_trees.glb"
+            textures={textures} position={[0, -20.5, 0]}
+            scale={[0.0005, 0.0005, 0.0005]}
+          />
+          <Grass model="models/grass.glb" textures={textures} position={[0, -20.5, 0]} scale={[0.05, 0.05, 0.05]} />
+          {/* </Suspense> */}
+        </>}
     </>
   );
 };

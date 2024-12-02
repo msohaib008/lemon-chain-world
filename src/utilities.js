@@ -1,41 +1,64 @@
 
 
-export const loadTextures = (textureLoader, TEXTURE_PATH) => ({
-    grass: textureLoader.load(`${TEXTURE_PATH}grass_color.png`),
-    bark: textureLoader.load(`${TEXTURE_PATH}bark_color.png`),
-    foliage: textureLoader.load(`${TEXTURE_PATH}foliage_color-foliage_opacity.png`),
-    leaves: textureLoader.load(`${TEXTURE_PATH}1234.png`),
-    bricksColor: textureLoader.load(`${TEXTURE_PATH}Bricks_color.png`),
-    bricksNormal: textureLoader.load(`${TEXTURE_PATH}Bricks_normal.png`),
-    trackColor: textureLoader.load(`${TEXTURE_PATH}track_color.jpg`),
-    tracksNormal: textureLoader.load(`${TEXTURE_PATH}tracks_normal.jpg`),
-    trackRough: textureLoader.load(`${TEXTURE_PATH}track_rough.jpg`),
-    foliageColor: textureLoader.load(`${TEXTURE_PATH}foliage_color-foliage_opacity.png`),
-    foliageAlpha: textureLoader.load(`${TEXTURE_PATH}Foliage_Alpha.png`),
-    foliageNormal: textureLoader.load(`${TEXTURE_PATH}foliage_normal.png`),
-    foliageRough: textureLoader.load(`${TEXTURE_PATH}foliage_roughness@channels=G.png`),
-    wallNormal: textureLoader.load(`${TEXTURE_PATH}tiglchydy_2K_Normal.jpg`),
-    wallRough: textureLoader.load(`${TEXTURE_PATH}tiglchydy_2K_Roughness.jpg`),
-    doorColor: textureLoader.load(`${TEXTURE_PATH}istockphoto-173201523-612x612.jpg`),
-    solar: textureLoader.load(`${TEXTURE_PATH}istockphoto-185692745-612x612.jpg`),
-    roof: textureLoader.load(`${TEXTURE_PATH}tfrneges_2K_Albedo.jpg`),
-    roofNormal: textureLoader.load(`${TEXTURE_PATH}tfrneges_2K_Normal.jpg`),
-    roofRough: textureLoader.load(`${TEXTURE_PATH}tfrneges_2K_Roughness.jpg`),
-    oldHouse: textureLoader.load(`${TEXTURE_PATH}house-old-photo-texture-of-building_640v640.jpg`),
-    oldRock: textureLoader.load(`${TEXTURE_PATH}old-rock-wall-texture-1619999.jpg`),
-    locomotive: textureLoader.load(`${TEXTURE_PATH}locomotive_diffuse.png`),
-    grama: textureLoader.load(`${TEXTURE_PATH}Grama_Albedo.png`),
-    gramaNormal: textureLoader.load(`${TEXTURE_PATH}Grama_Normal.png`),
-    gramaRough: textureLoader.load(`${TEXTURE_PATH}Grama_Roughness.png`),
-    path: textureLoader.load(`${TEXTURE_PATH}vkvnfa2_2K_Albedo.jpg`),
-    lemon: textureLoader.load(`${TEXTURE_PATH}textureLemon_Tree.png`),
-    terra: textureLoader.load(`${TEXTURE_PATH}vkvnfa2_2K_Albedo.jpg`),
-    terraNormal: textureLoader.load(`${TEXTURE_PATH}Terra_Normal.png`),
-    terraRough: textureLoader.load(`${TEXTURE_PATH}Terra_Rough.png`),
-    grassNew: textureLoader.load(`${TEXTURE_PATH}grass_new.png`),
-    grass1: textureLoader.load(`${TEXTURE_PATH}grass_2.png`),
-    grass2: textureLoader.load(`${TEXTURE_PATH}grass_3.png`),
-});
+export const loadTextures = async (textureLoader, TEXTURE_PATH) => {
+    const textureFiles = {
+        grass: `${TEXTURE_PATH}grass_color.png`,
+        bark: `${TEXTURE_PATH}bark_color.png`,
+        foliage: `${TEXTURE_PATH}foliage_color-foliage_opacity.png`,
+        leaves: `${TEXTURE_PATH}1234.png`,
+        bricksColor: `${TEXTURE_PATH}Bricks_color.png`,
+        bricksNormal: `${TEXTURE_PATH}Bricks_normal.png`,
+        trackColor: `${TEXTURE_PATH}track_color.jpg`,
+        tracksNormal: `${TEXTURE_PATH}tracks_normal.jpg`,
+        trackRough: `${TEXTURE_PATH}track_rough.jpg`,
+        foliageColor: `${TEXTURE_PATH}foliage_color-foliage_opacity.png`,
+        foliageAlpha: `${TEXTURE_PATH}Foliage_Alpha.png`,
+        foliageNormal: `${TEXTURE_PATH}foliage_normal.png`,
+        foliageRough: `${TEXTURE_PATH}foliage_roughness@channels=G.png`,
+        wallNormal: `${TEXTURE_PATH}tiglchydy_2K_Normal.jpg`,
+        wallRough: `${TEXTURE_PATH}tiglchydy_2K_Roughness.jpg`,
+        doorColor: `${TEXTURE_PATH}istockphoto-173201523-612x612.jpg`,
+        solar: `${TEXTURE_PATH}istockphoto-185692745-612x612.jpg`,
+        roof: `${TEXTURE_PATH}tfrneges_2K_Albedo.jpg`,
+        roofNormal: `${TEXTURE_PATH}tfrneges_2K_Normal.jpg`,
+        roofRough: `${TEXTURE_PATH}tfrneges_2K_Roughness.jpg`,
+        oldHouse: `${TEXTURE_PATH}house-old-photo-texture-of-building_640v640.jpg`,
+        oldRock: `${TEXTURE_PATH}old-rock-wall-texture-1619999.jpg`,
+        locomotive: `${TEXTURE_PATH}locomotive_diffuse.png`,
+        grama: `${TEXTURE_PATH}Grama_Albedo.png`,
+        gramaNormal: `${TEXTURE_PATH}Grama_Normal.png`,
+        gramaRough: `${TEXTURE_PATH}Grama_Roughness.png`,
+        path: `${TEXTURE_PATH}vkvnfa2_2K_Albedo.jpg`,
+        lemon: `${TEXTURE_PATH}textureLemon_Tree.png`,
+        terra: `${TEXTURE_PATH}vkvnfa2_2K_Albedo.jpg`,
+        terraNormal: `${TEXTURE_PATH}Terra_Normal.png`,
+        terraRough: `${TEXTURE_PATH}Terra_Rough.png`,
+        grassNew: `${TEXTURE_PATH}grass_new.png`,
+        grass1: `${TEXTURE_PATH}grass_2.png`,
+        grass2: `${TEXTURE_PATH}grass_3.png`,
+    }
+    const texturePromises = Object.entries(textureFiles).map(([key, path]) => {
+        return new Promise((resolve, reject) => {
+          textureLoader.load(
+            path,
+            (texture) => {
+              resolve({ key, texture });
+            },
+            undefined, // Optional progress handler
+            (err) => reject({ key, error: err })
+          );
+        });
+      });
+
+      const loadedTextures = await Promise.all(texturePromises);
+      const textures = {};
+      loadedTextures.forEach(({ key, texture }) => {
+        textures[key] = texture;
+      });
+    
+      console.log("All textures loaded:", textures);
+      return textures;
+};
 
 
 export const applyTextures = (object, textures, THREE) => {
