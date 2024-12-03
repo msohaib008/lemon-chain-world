@@ -65,10 +65,12 @@ export const Experience = () => {
     <>
       {textures &&
         <>
-          <Environment
+          {/* <Environment
             files="models/HDRI.hdr"
             background={false}
-          />
+          /> */}
+                    <hemisphereLight intensity={0.4} />
+
           <directionalLight
             intensity={0.4}
             castShadow
