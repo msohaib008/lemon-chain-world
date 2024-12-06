@@ -40,7 +40,10 @@ export const CharacterController = ({setIsRotating}) => {
         max: degToRad(5),
         step: degToRad(0.1),
       },
-    }
+      visible: true,
+      color: { value: 'lime' },
+    },
+    // { visible: false }
   );
   const rb = useRef();
   const container = useRef();
@@ -140,7 +143,7 @@ export const CharacterController = ({setIsRotating}) => {
       character.current.rotation.y = lerpAngle(
         character.current.rotation.y,
         characterRotationTarget.current,
-        0.1
+        0.3
       );
 
       rb.current.setLinvel(vel, true);
@@ -150,15 +153,15 @@ export const CharacterController = ({setIsRotating}) => {
     container.current.rotation.y = MathUtils.lerp(
       container.current.rotation.y,
       rotationTarget.current,
-      0.1
+      0.3
     );
 
     cameraPosition.current.getWorldPosition(cameraWorldPosition.current);
-    camera.position.lerp(cameraWorldPosition.current, 0.1);
+    camera.position.lerp(cameraWorldPosition.current, 0.35);
 
     if (cameraTarget.current) {
       cameraTarget.current.getWorldPosition(cameraLookAtWorldPosition.current);
-      cameraLookAt.current.lerp(cameraLookAtWorldPosition.current, 0.1);
+      cameraLookAt.current.lerp(cameraLookAtWorldPosition.current, 0.35);
 
       camera.lookAt(cameraLookAt.current);
     }

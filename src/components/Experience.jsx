@@ -66,10 +66,10 @@ export const Experience = () => {
       {textures &&
         <>
           {/* <Environment
-            files="models/HDRI.hdr"
+            path="https://drive.google.com/file/d/1R4tJm3Th_Qg5C_bXh5nz_hs52v10-zVl/uc?export=download&id=FILE_ID"
             background={false}
           /> */}
-                    <hemisphereLight intensity={0.4} />
+                    <hemisphereLight intensity={0.6} />
 
           <directionalLight
             intensity={0.4}

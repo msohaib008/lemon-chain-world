@@ -39,25 +39,25 @@ export const loadTextures = async (textureLoader, TEXTURE_PATH) => {
     }
     const texturePromises = Object.entries(textureFiles).map(([key, path]) => {
         return new Promise((resolve, reject) => {
-          textureLoader.load(
-            path,
-            (texture) => {
-              resolve({ key, texture });
-            },
-            undefined, // Optional progress handler
-            (err) => reject({ key, error: err })
-          );
+            textureLoader.load(
+                path,
+                (texture) => {
+                    resolve({ key, texture });
+                },
+                undefined, // Optional progress handler
+                (err) => reject({ key, error: err })
+            );
         });
-      });
+    });
 
-      const loadedTextures = await Promise.all(texturePromises);
-      const textures = {};
-      loadedTextures.forEach(({ key, texture }) => {
+    const loadedTextures = await Promise.all(texturePromises);
+    const textures = {};
+    loadedTextures.forEach(({ key, texture }) => {
         textures[key] = texture;
-      });
-    
-      console.log("All textures loaded:", textures);
-      return textures;
+    });
+
+    console.log("All textures loaded:", textures);
+    return textures;
 };
 
 
@@ -68,8 +68,8 @@ export const applyTextures = (object, textures, THREE) => {
             if (child.material.name === 'bark') {
                 child.material.map = textures.bark;
             } else if (child.material.name === 'foliage') {
-                child.material.map = textures.foliage;
-                child.material.color.set(0xFFFFFF);
+                // child.material.map = textures.foliage;
+                child.material.color.set(0x000000);
             }
             else if (child.material.name === "Material.011") {
                 child.material.map = textures.bricksColor;
@@ -114,7 +114,7 @@ export const applyTextures = (object, textures, THREE) => {
                 child.material.map.wrapT = THREE.RepeatWrapping;
                 child.material.side = THREE.DoubleSide;
 
-                // child.material.transparent = true;
+                child.material.transparent = true;
                 child.material.alphaTest = 0.8;
 
                 child.material.metalness = 0;
@@ -172,7 +172,12 @@ export const applyTextures = (object, textures, THREE) => {
                 child.material.alphaMap = textures.foliageAlpha;    // Set alpha texture
                 child.material.normalMap = textures.foliageNormal;   // Set normal map
                 child.material.roughnessMap = textures.foliageRough;
-                child.material.color.set(0xBACD92); // This helps avoid tinting from the color texture
+                child.material.color.set(0x608100); // This helps avoid tinting from the color texture
+
+                // child.material.metalness = 0;
+                // child.material.roughness = 0;
+
+                // child.material.side = THREE.DoubleSide;
             }
             else if (child.material.name === 'NewTree_Plane2') {
                 // console.log({ tree: child })
