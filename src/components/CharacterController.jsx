@@ -29,6 +29,9 @@ const lerpAngle = (start, end, t) => {
 };
 
 export const CharacterController = ({setIsRotating}) => {
+
+  const isMobile = window.innerWidth <= 768; // Check if it's a mobile device
+
   const { WALK_SPEED, RUN_SPEED, ROTATION_SPEED } = useControls(
     "Character Control",
     {
@@ -40,9 +43,8 @@ export const CharacterController = ({setIsRotating}) => {
         max: degToRad(5),
         step: degToRad(0.1),
       },
-      visible: true,
-      color: { value: 'lime' },
     },
+    { hidden: isMobile } // Hide the panel if on mobile
     // { visible: false }
   );
   const rb = useRef();

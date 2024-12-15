@@ -6,7 +6,7 @@ import { useThree } from "@react-three/fiber";
 import ReactDOM from "react-dom";
 
 export const Trees = ({ model, textures, ...props }) => {
-  const { scene } = useGLTF(model); // Load the tree model
+  const { scene } = useGLTF(model, true); // Load the tree model
   const [selectedTree, setSelectedTree] = useState(null); // Store selected tree
   const [selectedTrees, setSelectedTrees] = useState([]); // Store selected tree
 
@@ -30,7 +30,8 @@ export const Trees = ({ model, textures, ...props }) => {
         child.material = child.material.clone(); // Clone material for independent changes
       }
     });
-    applyTextures(scene, textures, THREE);
+    if (textures)
+      applyTextures(scene, textures, THREE);
   }, [scene, textures]);
 
   const handlePointerMove = (event) => {
@@ -83,12 +84,12 @@ export const Trees = ({ model, textures, ...props }) => {
         )}
         {linkPosition && selectedTrees.length > 0 && (
           <Html
-          position={[
-            linkPosition.position.x,
-            linkPosition.position.y + 50, // Offset to place above the tree
-            linkPosition.position.z,
-          ]}
-          style={{ top: -210 }}
+            position={[
+              linkPosition.position.x,
+              linkPosition.position.y + 50, // Offset to place above the tree
+              linkPosition.position.z,
+            ]}
+            style={{ top: -210 }}
           >
             <div
               style={{
@@ -111,9 +112,10 @@ export const Trees = ({ model, textures, ...props }) => {
                   padding: "10px 20px",
                   textDecoration: "none",
                   borderRadius: "5px",
+                  cursor: "pointer"
                 }}
               >
-                {selectedTrees.length} trees ready to be minted! Click here
+                Mint {selectedTrees.length} {selectedTrees.length > 1 ? "Trees" : "Tree"}
               </a>
             </div>
           </Html>

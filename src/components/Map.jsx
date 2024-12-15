@@ -4,25 +4,25 @@ import { useEffect, useRef } from "react";
 import { applyTextures } from "../utilities";
 import * as THREE from 'three';
 
-export const Map = ({ model,onLoaded ,textures, ...props }) => {
-  const { scene, animations } = useGLTF(model);
+export const Map = ({ model, onLoaded, textures, ...props }) => {
+  const { scene, animations } = useGLTF(model, true);
   const group = useRef();
   const { actions } = useAnimations(animations, group);
 
 
   useEffect(() => {
-      scene.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-        }
-      });
-      applyTextures(scene, textures, THREE);
-
-      if (onLoaded) {
-        onLoaded(); // Call parent component's onLoaded function
+    if (onLoaded && scene) {
+      onLoaded(); // Call parent component's onLoaded function
+    }
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
       }
-  }, [scene, onLoaded]);
+    });
+    if(textures)
+    applyTextures(scene, textures, THREE);
+  }, [scene, onLoaded, textures]);
 
 
   useEffect(() => {

@@ -4,7 +4,8 @@ import * as THREE from "three";
 import { loadTextures, applyTextures } from "../utilities";
 
 export const Grass = ({ model, textures, ...props }) => {
-  const { scene } = useGLTF(model); // Load the tree model
+  const { scene } = useGLTF(model, true); // Load the tree model
+  
   useEffect(() => {
     // Traverse the scene and make sure the trees don't have any colliders or RigidBody attached
     scene.traverse((child) => {
@@ -15,8 +16,9 @@ export const Grass = ({ model, textures, ...props }) => {
         child.receiveShadow = true;
       }
     });
-    applyTextures(scene, textures, THREE);
-  }, [scene]);
+    if (textures)
+      applyTextures(scene, textures, THREE);
+  }, [scene, textures]);
 
   return (
     <group {...props}>

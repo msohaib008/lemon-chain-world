@@ -11,6 +11,7 @@ import { Trees } from "./Trees";
 import { Grass } from "./Grass";
 import { TextureLoader } from "three"
 import { loadTextures } from "../utilities";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
 
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
@@ -29,6 +30,9 @@ const trees = [
 export const Experience = () => {
   const [isRotating, setIsRotating] = useState(false);
   const [textures, setTextures] = useState(null);
+  const [hdrTexture, setHdrTexture] = useState(null); // State to store HDR texture
+  const [loadingScene, setLoadingScene] = useState(false);
+
   const shadowCameraRef = useRef();
   const { map } = useControls("Map", {
     map: {
@@ -41,6 +45,14 @@ export const Experience = () => {
     loader.setDRACOLoader(dracoLoader); // Attach DRACOLoader to GLTFLoader
   });
 
+  // const loadHDR = async () => {
+  //   const loader = new RGBELoader();
+  //   loader.loadAsync("https://www.dropbox.com/scl/fi/xg0hyo1gksv304udqmh8a/shudu_lake_4k.hdr?rlkey=zumzo8p2o2ahddce11gxrcjap&st=m9uykbyp&dl=0") // Replace with your hosted HDR file URL
+  //     .then((hdr) => {
+  //       setHdrTexture(hdr);
+  //     })
+  //     .catch((err) => console.error("Failed to load HDR file:", err));
+  // };
 
   const [mapLoaded, setMapLoaded] = useState(false); // State to track map load status
 
@@ -49,27 +61,27 @@ export const Experience = () => {
   };
   const textureLoader = new TextureLoader();
 
-  
+
 
   const useLoadTexture = async () => {
     await loadTextures(textureLoader, 'Textures/').then((txtrs) => {
-      console.log("Textures ready for use:", txtrs);
+      // console.log("Textures ready for use:", txtrs);
       setTextures(txtrs)
     });
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     useLoadTexture();
-  },[])
+    // loadHDR(); // Start loading HDR from external source
+  }, [])
+  
   return (
     <>
       {textures &&
         <>
-          {/* <Environment
-            path="https://drive.google.com/file/d/1R4tJm3Th_Qg5C_bXh5nz_hs52v10-zVl/uc?export=download&id=FILE_ID"
-            background={false}
-          /> */}
-                    <hemisphereLight intensity={0.6} />
+
+         
+          <hemisphereLight intensity={0.6} />
 
           <directionalLight
             intensity={0.4}

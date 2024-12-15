@@ -17,3 +17,9 @@ body {
   transform: translate3d(591.15px, 634.08px, 0px) scale(1) !important;
   /* Override child div transforms */
 }
+
+@media only screen and (max-width: 768px) {
+  .leva-c-kWgxhW  {
+    display: none !important;
+  }
+}
